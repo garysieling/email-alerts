@@ -85,8 +85,8 @@ describe('isEligibleIfNeverSentTodayIsMonday', function() {
     it('should be true when today is monday', function() {
       
       const testDay = new Date(Date.parse("August 14, 2017 9:00 AM"));
-      const lastSent = undefined;
-      const lastEligible = undefined;
+      const lastSent: Date = undefined;
+      const lastEligible: Date = undefined;
 
       assert.equal(true, isEligible(testDay, lastSent, lastEligible));
     });
@@ -98,8 +98,8 @@ describe('isEligibleIfNeverSentTodayIsNotMonday', function() {
     it('should be true when today is monday', function() {
       
       const testDay = new Date(Date.parse("August 13, 2017 9:00 AM"));
-      const lastSent = undefined;
-      const lastEligible = undefined;
+      const lastSent: Date = undefined;
+      const lastEligible: Date = undefined;
 
       assert.equal(true, isEligible(testDay, lastSent, lastEligible));
     });
