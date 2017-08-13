@@ -27,8 +27,8 @@ function isEligible(testDay: Date, lastSent?: Date, lastEligible?: Date) {
 
   // if today is monday  
   //console.log(testDay.getDay(), testDay.getHours(), lastMonday, todayRounded);
-  if (testDay.getDay() === 1 && testDay.getHours() > 8) {
-    if (!lastMonday || (todayRounded - lastMonday) >= 7) {
+  if (testDay.getDay() === 1 && testDay.getHours() >= 9) {
+    if (todayRounded - lastMonday >= 7) {
       eligible = true;
     }
   } else {
