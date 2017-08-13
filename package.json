@@ -1,0 +1,28 @@
+{
+  "name": "email-alerts",
+  "version": "1.0.0",
+  "description": "Weekly Emails",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "ts-mocha -p . ./**/*.spec.ts",
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ts-node -- ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garysieling/email-alerts.git"
+  },
+  "author": "Gary Sieling",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garysieling/email-alerts/issues"
+  },
+  "homepage": "https://github.com/garysieling/email-alerts#readme",
+  "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^8.0.20",
+    "mocha": "^3.5.0",
+    "ts-mocha": "^1.0.3",
+    "typescript": "^2.4.2"
+  }
+}
