@@ -1,6 +1,11 @@
 const assert = require('assert');
 
-import { queryForLikeAndDislike } from './rules';
+import { 
+  queryForLikeAndDislike,
+  boostLike,
+  boostDislike,
+  getHypernyms
+} from './rules';
 
 describe('NoRules - empty string', function() {
   describe('#queryForLikeAndDislike()', function() {
@@ -67,3 +72,54 @@ describe('positive and negative', function() {
     });
   });
 });
+
+
+
+describe('boost - like', function() {
+  describe('#queryForLikeAndDislike()', function() {
+    it('valid solr query positive and negative', function() {
+      assert.equal('article:javascript^1%20article:npm^1', 
+        boostLike("article", [{
+          term: "javascript", 
+          value: 1
+        }, {
+          term: "npm",
+          value: 1
+        }]));
+    });
+  });
+});
+
+
+
+describe('boost - dislike', function() {
+  describe('#queryForLikeAndDislike()', function() {
+    it('valid solr query positive and negative', function() {
+      assert.equal('article:javascript^0.1%20article:npm^0.1', 
+        boostDislike("article", [{
+          term: "javascript", 
+          value: 0.1
+        }, {
+          term: "npm",
+          value: 0.1
+        }]));
+    });
+  });
+});
+
+
+/*getHypernyms(['cat'], (results) => {
+  describe('get hypernyms', function() {
+    describe('#queryForLikeAndDislike()', function() {
+      it('can find child terms', function() {
+        assert.equal([
+            {
+
+            }
+          ], 
+          results
+        );
+      });
+    });
+  });
+});*/
