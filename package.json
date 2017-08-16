@@ -25,5 +25,8 @@
     "mocha": "^3.5.0",
     "ts-mocha": "^1.0.3",
     "typescript": "^2.4.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
   }
 }
