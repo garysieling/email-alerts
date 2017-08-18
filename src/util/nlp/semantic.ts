@@ -12,7 +12,7 @@ function initializeDatabase() {
     }
     stmt.finalize();
 
-    db.each("SELECT rowid AS id, info FROM lorem", function(err, row) {
+    db.each("SELECT rowid AS id, info FROM lorem", function(err: any, row: any) {
         console.log(row.id + ": " + row.info);
     });
   });
