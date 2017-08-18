@@ -1,7 +1,9 @@
 const assert = require('assert');
+import * as _ from 'lodash';
 
 import {
-  initializeDatabase
+  initializeDatabase,
+  closeWords
 } from './semantic';
 
 describe('word2vec', function() {
@@ -9,5 +11,14 @@ describe('word2vec', function() {
     initializeDatabase();
     
     assert.equal(true, true);
+  });
+
+  it('can find words', function() {
+    closeWords(
+      'java',
+      (results) => {
+        assert.equal(results.length > 0 && _.isArray(results));
+      }
+    )    
   });
 });

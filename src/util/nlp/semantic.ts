@@ -1,4 +1,32 @@
 import * as sqlite3 from 'sqlite3';
+import * as http from 'http';
+
+function closeWords(term: string, cb: (result: string[]) => void) {
+  let q = term.replace(/ /g, '%20');
+  const url = `http://104.237.151.183:8983/solr/topics/select?q=word%3A${q}&wt=json`;
+
+  http.get(
+    url,
+    (result) => {
+      let rawData = '';
+
+      result.on('data', (chunk) => { 
+        rawData += chunk; 
+      });
+
+      result.on('end', () => {
+        try {
+          const parsedData = JSON.parse(rawData);
+          cb(parsedData.response.docs[0].suggestions)
+        } catch (e) {
+          console.error(e.message);
+        }
+      });
+
+    }
+  )
+}
+
 
 function initializeDatabase() {
   const db = new sqlite3.Database("data/words.db");
@@ -21,5 +49,6 @@ function initializeDatabase() {
 }
 
 export {
-  initializeDatabase
+  initializeDatabase,
+  closeWords
 }
