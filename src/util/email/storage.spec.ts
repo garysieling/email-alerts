@@ -1,7 +1,8 @@
 const assert = require('assert');
 
 import { 
-  loadSent
+  loadSent,
+  loadAlerts
 } from './storage';
 
 describe('Test for sent emails', function() {
@@ -14,4 +15,28 @@ describe('Test for sent emails', function() {
         });
       }
     );
+
+  // todo test caching
 });
+
+describe('Test alert listing', function() {
+  it('is can retrieve a list of alerts', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        const emails: any = data.map(
+          (row: any) => row.email
+        );
+
+        assert.equal(true, emails['includes']('gary.sieling@gmail.com'));
+
+        done();
+    });
+  });
+});
+

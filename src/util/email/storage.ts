@@ -2,9 +2,7 @@ import {isTesting} from '../env';
 import * as _ from 'lodash';
 
 const GoogleSpreadsheet = require("google-spreadsheet");
-  
-const async = require("async");
-  
+const async = require("async"); 
 
 const sentCache: any = {};
 
@@ -86,7 +84,49 @@ function loadSent(email: string, cb: any) {
   }  
 }
 
+
+function loadAlerts(rowCallback: any, completionCallback: any) {
+  const doc = new GoogleSpreadsheet(getSpreadsheetId());
+  let sheet: any = null;
+  
+  async.series([
+    function setAuth(step: any) {
+      doc.useServiceAccountAuth(getAuthentication(), step);
+    },
+    function getInfoAndWorksheets(step: any) {
+      doc.getInfo(function(err: any, info: any) {
+        console.log(err);
+        //console.log(JSON.stringify(info, null, 2));
+        sheet = info.worksheets[0];
+        //console.log("sheet 1: "+sheet.title+" "+sheet.rowCount+"x"+sheet.colCount);
+        step();
+      });
+    },   
+    function workingWithRows(step: any) {
+      // google provides some query options 
+      sheet.getRows({
+        offset: 1,
+        limit: 10000 // TODO
+      }, function( err: any, rows: any ){   
+        async.mapSeries(
+          rows,
+          (data: any, cb2: any) => rowCallback(cb2, data),
+          () => step()
+        );
+      });
+    }
+  ], function(err: any) {
+    if (err) {
+      console.log("Error: "+ err);
+    }
+
+    completionCallback();
+  });
+
+}
+
 export { 
+  loadAlerts,
   preloadSent,
   loadSent
 }
