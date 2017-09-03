@@ -1,6 +1,8 @@
 import {isTesting} from '../env';
 import * as _ from 'lodash';
 
+const GoogleSpreadsheet = require("google-spreadsheet");
+  
 const async = require("async");
   
 
@@ -21,15 +23,10 @@ function getAuthentication() {
   };
 }
 
-function loadSent(email: string, finalCallback: any) {
-var GoogleSpreadsheet = require("google-spreadsheet");
+function preloadSent(finalCallback: any) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   let sheet: any = null;
   
-  if (!sentCache[email]) {
-    sentCache[email] = [];
-  }
-
   async.series([
     function setAuth(step: any) {
       doc.useServiceAccountAuth(getAuthentication(), step);
@@ -37,14 +34,12 @@ var GoogleSpreadsheet = require("google-spreadsheet");
     function getInfoAndWorksheets(step: any) {
       doc.getInfo(function(err: any, info: any) {
         console.log(err);
-        //console.log(JSON.stringify(info, null, 2));
         var sheetId = _.findIndex(info.worksheets,
           (worksheet: any) => worksheet['title'] === "Sent"
         ); 
 
         sheet = info.worksheets[sheetId];
 
-        //console.log("sheet 1: "+sheet.title+" "+sheet.rowCount+"x"+sheet.colCount);
         step();
       });
     },   
@@ -60,6 +55,10 @@ var GoogleSpreadsheet = require("google-spreadsheet");
           (data: any) => {
             const email = data["email"];
 
+            if (!sentCache[email]) {
+              sentCache[email] = [];
+            }
+
             const link = data["link"] + "";
             sentCache[email].push(link);
           }
@@ -73,10 +72,21 @@ var GoogleSpreadsheet = require("google-spreadsheet");
       console.log("Error: " + err);
     }
 
-    finalCallback(sentCache[email]);
+    finalCallback();
   });
 }
 
+function loadSent(email: string, cb: any) {
+  if (_.keys(sentCache).length === 0) {
+    preloadSent(() => {
+      cb(sentCache[email])
+    });
+  } else {
+    cb(sentCache[email]);
+  }  
+}
+
 export { 
+  preloadSent,
   loadSent
 }
