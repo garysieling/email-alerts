@@ -5,12 +5,6 @@ import {
 } from './env';
 
 describe('Test for production/testing modes', function() {
-  describe('test nothing defined', function() {
-    it('is false if nothing defined', function() {
-      assert.equal(false, isTesting());
-    });
-  });
-
   describe('test false', function() {
     it('is false if false', function() {
       process.env.IS_PRODUCTION = 'false';
@@ -25,5 +19,7 @@ describe('Test for production/testing modes', function() {
     it('is true if true', function() {
       assert.equal(true, isTesting());
     });
+
+    process.env.IS_PRODUCTION = 'false';
   });
 });
