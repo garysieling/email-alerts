@@ -107,17 +107,44 @@ describe('Test templating', function() {
     );      
   });
 
+  
+
+  it('text template includes email', function() {
+    assert.equal(
+      "gary.sieling@gmail.com gary.sieling@gmail.com", 
+      buildEmail(
+        {
+          identifier: "testID",
+          email: "gary.sieling@gmail.com",
+          like: [],
+          dislike: []
+        },
+        "",
+        "{email} {email}",        
+        [],
+        []
+      ).textEmail
+    );
+  });
+
+  it('html template  includes email', function() {
+  assert.equal(
+      "gary.sieling@gmail.com gary.sieling@gmail.com", 
+      buildEmail(
+        {
+          identifier: "testID",
+          email: "gary.sieling@gmail.com",
+          like: [],
+          dislike: []
+        },
+        "{email} {email}",
+        "",
+        [],
+        []
+      ).htmlEmail
+    );      
+  });
   /*
-  // todo
-   /{alertId}/g,
-          alertId
-        ).replace(
-        ).replace(
-          /{email}/g,
-          email
-        ).replace(
-          /{emailId}/g,
-          emailId
         ).replace(
           /{links}/g, 
           links

@@ -195,16 +195,19 @@ ${articleUrl}
 */
     const textEmail = 
       textTemplate.replace(
-        "{alertId}",
+        /{alertId}/g,
         alertId
       ).replace(
-        "{unsubscribeUrl}",
+        /{unsubscribeUrl}/g,
         unsubscribeUrl
       ).replace(
-        "{emailId}",
+        /{emailId}/g,
         emailId
       ).replace(
-        "{links}", 
+        /{email}/g,
+          email
+      ).replace(
+        /{links}/g, 
         videoLinks //+ " " + articleLinks
       );
       
