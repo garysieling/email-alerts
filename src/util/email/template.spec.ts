@@ -31,4 +31,44 @@ describe('Test length formatting', function() {
   });
 });
 
+describe('Test templating', function() {
+  it('text template includes unsubscribe link', function() {
+    assert.equal(
+      "https://www.findlectures.com/alert-unsubscribe?id=testID", 
+      buildEmail(
+        {
+          identifier: "testID",
+          email: "",
+          like: [],
+          dislike: []
+        },
+        "",
+        "{unsubscribeUrl}",        
+        [],
+        []
+      ).textEmail
+    );
+  });
+
+  it('html template includes unsubscribe link', function() {
+  assert.equal(
+      "https://www.findlectures.com/alert-unsubscribe?id=testID", 
+      buildEmail(
+        {
+          identifier: "testID",
+          email: "",
+          like: [],
+          dislike: []
+        },
+        "{unsubscribeUrl}",
+        "",
+        [],
+        []
+      ).htmlEmail
+    );  });
+});
+
 // todo test email tmemplating
+// test all the appropriate variables are in each template
+// test text template is text, and vice versa
+// test each variable sorta works

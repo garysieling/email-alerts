@@ -1,8 +1,6 @@
 const Guid = require("guid");
 const fs = require("fs");
 
-const htmlTemplate = fs.readFileSync("./resources/alerts.html", "utf-8");
-const textTemplate = fs.readFileSync("./resources/alerts.txt", "utf-8");
 const querystring = require("querystring");
 
 interface EmailTemplate {
@@ -31,12 +29,6 @@ interface IAlert {
   identifier: string; // GUID
 }
 
-// TODO recordSent(context, videoRecommendations);
-// "895b990f-ac62-47a0-a984-a380edd59d54"
-//     const client = new postmark.Client(process.env.POSTMARK_API_KEY);
-//   let todayRounded = getDayOfTime(testDay);
-
-
 function formatLength(length: number) {
   try {
     if (length >= 60 * 70) {
@@ -54,10 +46,16 @@ function formatLength(length: number) {
   }
 }
 
-function buildEmail(data: IAlert, articleRecommendations: IArticle[], videoRecommendations: IVideo[]) {
-  let {email, like, dislike} = data;
+function getHtmlTemplate() {
+  return fs.readFileSync("./resources/alerts.html", "utf-8");
+}
 
-  const postmark = require("postmark");
+function getTextTemplate() {
+  return fs.readFileSync("./resources/alerts.txt", "utf-8");
+}
+
+function buildEmail(data: IAlert, htmlTemplate: string, textTemplate: string, articleRecommendations: IArticle[], videoRecommendations: IVideo[]) {
+  let {email, like, dislike} = data;
 
   let alertId = data.identifier;
   let emailId = Guid.create().value.replace(/-/g, "");
@@ -200,6 +198,9 @@ ${articleUrl}
         "{alertId}",
         alertId
       ).replace(
+        "{unsubscribeUrl}",
+        unsubscribeUrl
+      ).replace(
         "{emailId}",
         emailId
       ).replace(
@@ -217,5 +218,7 @@ ${articleUrl}
 
 export {
   formatLength,
-  buildEmail
+  buildEmail,
+  getHtmlTemplate,
+  getTextTemplate
 }
