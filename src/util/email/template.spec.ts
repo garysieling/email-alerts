@@ -71,6 +71,44 @@ describe('Test templating', function() {
    );
   });
 
+
+  
+  it('text template includes emailId', function() {
+    assert.equal(
+      32, 
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: []
+        },
+        "",
+        "{emailId}",        
+        [],
+        []
+      ).textEmail.length
+    );
+  });
+
+  it('html template includes includes emailId', function() {
+  assert.equal(
+      32, 
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "gary.sieling@gmail.com",
+          like: [],
+          dislike: []
+        },
+        "{emailId}",
+        "",
+        [],
+        []
+      ).htmlEmail.length
+   );
+  });
+
   it('text template includes unsubscribe link', function() {
     assert.equal(
       "https://www.findlectures.com/alert-unsubscribe?id=testID", 
