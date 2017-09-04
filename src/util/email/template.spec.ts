@@ -34,6 +34,43 @@ describe('Test length formatting', function() {
 });
 
 describe('Test templating', function() {
+
+  it('text template includes alertId', function() {
+    assert.equal(
+      "emailId", 
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: []
+        },
+        "",
+        "{alertId}",        
+        [],
+        []
+      ).textEmail
+    );
+  });
+
+  it('html template includes includes alertId', function() {
+  assert.equal(
+      "emailId", 
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "gary.sieling@gmail.com",
+          like: [],
+          dislike: []
+        },
+        "{alertId}",
+        "",
+        [],
+        []
+      ).htmlEmail
+   );
+  });
+
   it('text template includes unsubscribe link', function() {
     assert.equal(
       "https://www.findlectures.com/alert-unsubscribe?id=testID", 
@@ -67,7 +104,7 @@ describe('Test templating', function() {
         [],
         []
       ).htmlEmail
-    );  
+    );      
   });
 
   /*
@@ -136,9 +173,14 @@ describe('Test templates', function() {
   it('text template has no double }}', function() {
     assert.equal(true, getTextTemplate().indexOf("}}") < 0);
   });
+
+  it('text template has no html', function() {
+    assert.equal(true, getTextTemplate().indexOf("<br />") < 0);
+  });
+
+  it('text template has no html', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("<br />") >= 0);
+  });
 });
 
 // todo test email tmemplating
-// test all the appropriate variables are in each template
-// test text template is text, and vice versa
-// test each variable sorta works

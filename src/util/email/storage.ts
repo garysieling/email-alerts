@@ -77,10 +77,10 @@ function preloadSent(finalCallback: any) {
 function loadSent(email: string, cb: any) {
   if (_.keys(sentCache).length === 0) {
     preloadSent(() => {
-      cb(sentCache[email])
+      cb(_.cloneDeep(sentCache[email]) || [])
     });
   } else {
-    cb(sentCache[email]);
+    cb(_.cloneDeep(sentCache[email]) || []);
   }  
 }
 
