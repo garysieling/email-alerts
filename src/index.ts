@@ -20,7 +20,9 @@ function main() {
     (cb: any, data: any) => {
       loadSent(
           data.email,
-          () => {
+          (sentEmails: string[]) => {
+
+
             cb();
           }
         )
