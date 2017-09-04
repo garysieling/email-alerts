@@ -2,7 +2,9 @@ const assert = require('assert');
 
 import { 
   buildEmail,
-  formatLength
+  formatLength,
+  getHtmlTemplate,
+  getTextTemplate
 } from './template';
 
 describe('Test length formatting', function() {
@@ -65,7 +67,34 @@ describe('Test templating', function() {
         [],
         []
       ).htmlEmail
-    );  });
+    );  
+  });
+
+  /*
+  // todo
+   /{alertId}/g,
+          alertId
+        ).replace(
+        ).replace(
+          /{email}/g,
+          email
+        ).replace(
+          /{emailId}/g,
+          emailId
+        ).replace(
+          /{links}/g, 
+          links
+          */
+});
+
+describe('Test templates', function() {
+  it('html template has unsubscribe link', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{unsubscribeUrl}") > 0);
+  });
+
+  it('text template has unsubscribe link', function() {
+    assert.equal(true, getTextTemplate().indexOf("{unsubscribeUrl}") > 0);
+  });
 });
 
 // todo test email tmemplating
