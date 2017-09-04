@@ -149,7 +149,7 @@ function buildEmail(data: IAlert, htmlTemplate: string, textTemplate: string, ar
           links
       );
 
-      const videoLinks = videoRecommendations.map(
+      const videoLinks = "Videos\n\n" + videoRecommendations.map(
         (video: IVideo) => {
           const talkUrl = 
             "https://www.findlectures.com/talk-redirect?" +

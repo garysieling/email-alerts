@@ -72,6 +72,61 @@ describe('Test templating', function() {
   });
 
 
+  it('text template includes video title', function() {
+    assert.equal(
+      `Videos
+
+Title (1 minute)
+
+https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=&emailId=12345&alertId=emailId
+
+`,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: []
+        },
+        "",
+        "{links}",        
+        [],
+        [{
+          title_s: "Title",
+          id: "zzz",
+          url_s: "abcdefg",
+          audio_length_f: 60
+        }]
+      ).textEmail.replace(/emailId=[a-z0-9]+/g, "emailId=12345")
+    );
+  });
+
+  it('html template includes includes title', function() {
+  assert.equal(
+      `<h1>Videos</h1><strong>
+<a href="https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=gary.sieling%40gmail.com&emailId=12345&alertId=emailId">Title (1 minute)</a>
+</strong><br />
+<br />
+`,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "gary.sieling@gmail.com",
+          like: [],
+          dislike: []
+        },
+        "{links}",
+        "",
+        [],
+        [{
+          title_s: "Title",
+          id: "zzz",
+          url_s: "abcdefg",
+          audio_length_f: 60
+        }]
+      ).htmlEmail.replace(/emailId=[a-z0-9]+/g, "emailId=12345")
+   );
+  });
   
   it('text template includes emailId', function() {
     assert.equal(
