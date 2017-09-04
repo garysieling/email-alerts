@@ -16,7 +16,7 @@ What did you think of this email?
 
 Hated it
 
-https://www.findlectures.com/form?type=dislike&utm_campaign={alertId}&email={email}}&emailId={emailId}&utm_source=findlectures-alerts&utm_term=dislike
+https://www.findlectures.com/form?type=dislike&utm_campaign={alertId}&email={email}&emailId={emailId}&utm_source=findlectures-alerts&utm_term=dislike
 
 Loved it
 

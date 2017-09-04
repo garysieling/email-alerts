@@ -95,6 +95,47 @@ describe('Test templates', function() {
   it('text template has unsubscribe link', function() {
     assert.equal(true, getTextTemplate().indexOf("{unsubscribeUrl}") > 0);
   });
+
+  it('html template has spot for links', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{links}") > 0);
+  });
+
+  it('text template has spot for links', function() {
+    assert.equal(true, getTextTemplate().indexOf("{links}") > 0);
+  });
+
+  
+  it('html template has spot for emailId', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{emailId}") > 0);
+  });
+
+  it('text template has spot for emailId', function() {
+    assert.equal(true, getTextTemplate().indexOf("{emailId}") > 0);
+  });
+  
+  it('html template has spot for email address', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{email}") > 0);
+  });
+
+  it('text template has spot for email address', function() {
+    assert.equal(true, getTextTemplate().indexOf("{email}") > 0);
+  });
+    
+  it('html template has no double {{', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{{") < 0);
+  });
+
+  it('text template has no double {{', function() {
+    assert.equal(true, getTextTemplate().indexOf("{{") < 0);
+  });
+
+  it('html template has no double }}', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("}}") < 0);
+  });
+
+  it('text template has no double }}', function() {
+    assert.equal(true, getTextTemplate().indexOf("}}") < 0);
+  });
 });
 
 // todo test email tmemplating
