@@ -115,8 +115,8 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
           (data: any, cb2: (data: IAlertTemplate) => void) => {
             const alertData: IAlertTemplate = {
               email: data['email'],
-              like: data['like'],
-              dislike: data['dislike'],
+              like: (data['like'] || '').split(","),
+              dislike: (data['dislike'] || '').split(","),
               identifier: data['identifier'],
               unsubscribed: !!data['unsubscribed'],
               lastSent: new Date(parseInt(data['lastsent'])),

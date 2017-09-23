@@ -1,4 +1,5 @@
 const assert = require('assert');
+const _ = require('lodash');
 
 import { 
   loadSent,
@@ -49,6 +50,36 @@ describe('Test alert listing', function() {
       },
       () => {
         assert.equal(true, data[1].lastSent.getFullYear() === 2017);
+       
+        done();
+    });
+  });
+
+  it('loads likes', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, _.isEqual(["machine learning", "github"], data[1].like));
+       
+        done();
+    });
+  });
+
+  it('loads dislikes', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, _.isEqual(["new jersey", "politics"], data[1].dislike));
        
         done();
     });

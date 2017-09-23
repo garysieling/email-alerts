@@ -9,6 +9,11 @@ import {
   loadSent
 } from './util/email/storage'
 
+import {
+  getVideos,
+  getArticles
+} from './util/solr/rules'
+
 import { 
   buildEmail,
   getHtmlTemplate,
@@ -39,15 +44,15 @@ function main() {
   loadAlerts(
     (cb: any, context: IAlertTemplate) => {
       // TODO this needs to convert what's in the spreadsheet to dates
-      // TODO make sure unsubscribes are filtered out
-      if (isEligible(startTime, context.lastSent, context.lastEligible)) {
+      if (!context.unsubscribed && 
+          isEligible(startTime, context.lastSent, context.lastEligible)) {
         loadSent(
             context.email,
             (sentLinks: string[]) => {
 
               // TODO implement these
-              const videos: IVideo[] = getNextVideos(sentLinks);
-              const articles: IArticle[] = getNextArticles(sentLinks);
+              const videos: IVideo[] = getVideos(context.like, context.dislike, sentLinks);
+              const articles: IArticle[] = getArticles(context.like, context.dislike, sentLinks);
 
               const fullEmail = buildEmail(
                 context, 
