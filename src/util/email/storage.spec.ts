@@ -34,7 +34,68 @@ describe('Test alert listing', function() {
         );
 
         assert.equal(true, emails['includes']('gary.sieling@gmail.com'));
+        
+        done();
+    });
+  });
 
+  it('loads lastSent', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[1].lastSent.getFullYear() === 2017);
+       
+        done();
+    });
+  });
+
+  it('loads created', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[1].created.getFullYear() === 2017);
+        
+        done();
+    });
+  });
+
+  
+  it('loads lastEligible', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[1].lastEligible.getFullYear() === 2017);
+        
+        done();
+    });
+  });
+
+  it('is loads unsubscribe', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[0].unsubscribed);
+        
         done();
     });
   });

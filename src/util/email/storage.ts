@@ -117,7 +117,11 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
               email: data['email'],
               like: data['like'],
               dislike: data['dislike'],
-              identifier: data['identifier']
+              identifier: data['identifier'],
+              unsubscribed: !!data['unsubscribed'],
+              lastSent: new Date(parseInt(data['lastsent'])),
+              created: new Date(parseInt(data['created'])),
+              lastEligible: new Date(parseInt(data['lasteligible']) * 24 * 3600 * 1000)
             }
             
             rowCallback(cb2, alertData);

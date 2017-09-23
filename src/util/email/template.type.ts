@@ -23,7 +23,9 @@ interface IAlertTemplate {
   like: string[];
   dislike: string[];
   lastSent: Date;
+  created: Date;
   lastEligible: Date;
+  unsubscribed: boolean;
 }
 
 export {

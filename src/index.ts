@@ -39,6 +39,7 @@ function main() {
   loadAlerts(
     (cb: any, context: IAlertTemplate) => {
       // TODO this needs to convert what's in the spreadsheet to dates
+      // TODO make sure unsubscribes are filtered out
       if (isEligible(startTime, context.lastSent, context.lastEligible)) {
         loadSent(
             context.email,
@@ -57,7 +58,7 @@ function main() {
 
               sendEmail(fullEmail);
 
-              recordSent(context);
+              recordSent(context, videos, articles);
 
               cb();
             }
