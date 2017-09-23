@@ -59,8 +59,8 @@ function preloadSent(finalCallback: any) {
               sentCache[email] = [];
             }
 
-            const link = data["link"] + "";
-            sentCache[email].push(link);
+            const id = data["id"] + "";
+            sentCache[email].push(id);
           }
         );
 
@@ -140,8 +140,50 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
 
 }
 
+function recordAlertSent(context: IAlertTemplate, todayRounded: String, cb: () => void) {
+  updateSheet("alert", "Requested Alerts", {
+    identifier: context.identifier,
+    "Last Sent": (new Date().getTime()) + "",
+    "Last Eligible": todayRounded
+  }, cb);
+}
+
+function recordSentLinks(context: any, sent: {id: string, title: string}[], completionCallback: () => void) {
+  const doc = new GoogleSpreadsheet(getSpreadsheetId());
+  const sentIds = sent.map( (sent: {id: string}) => sent.id );
+
+  
+  saveRows(
+    () => {
+      //console.log("saved sent rows");
+    },
+    getSpreadsheetId(),
+    "Sent",
+    sent.map(
+      (row) => {
+        return _.defaults({}, context, {
+          Link: row.id,
+          Title: row.title
+        });
+      }
+    )
+  );
+
+  const emailAddress = context.email;
+
+  // by the time you're saving this, "getSent" should have already been called
+  // which would populate this
+  sentCache[emailAddress] = (sentCache[emailAddress] || []).concat(sentIds);
+  //console.log("set", emailAddress, sentCache[emailAddress]);  
+  
+  //ids.map((id) => sent[email].push(id));
+}
+
+
 export { 
   loadAlerts,
   preloadSent,
-  loadSent
+  loadSent,
+  recordSentLinks,
+  recordAlertSent
 }

@@ -6,7 +6,9 @@ import {
 
 import {
   loadAlerts,
-  loadSent
+  loadSent,
+  recordAlertSent,
+  recordSentLinks
 } from './util/email/storage'
 
 import {
@@ -17,7 +19,8 @@ import {
 import { 
   buildEmail,
   getHtmlTemplate,
-  getTextTemplate
+  getTextTemplate,
+  sendEmail
 } from './util/email/template'
 
 import {
@@ -27,6 +30,7 @@ import {
 } from './util/email/template.type'
 
 import {
+  getDayOfTime,
   isEligible
 } from './util/email/schedule'
 
@@ -39,7 +43,8 @@ function main() {
   const startTime: Date = new Date();
 
   console.log('main');
-  
+  let todayRounded = getDayOfTime(startTime) + "";
+
   // TODO: this would be better as promises
   loadAlerts(
     (cb: any, context: IAlertTemplate) => {
@@ -51,21 +56,33 @@ function main() {
             (sentLinks: string[]) => {
 
               // TODO implement these
-              /*const videos: IVideo[] = getVideos(context.like, context.dislike, sentLinks);
-              const articles: IArticle[] = getArticles(context.like, context.dislike, sentLinks);
+              getVideos(context.like, context.dislike, sentLinks,
+                (videos: IVideo[]) => {
+                  getArticles(context.like, context.dislike, sentLinks,
+                    (articles: IArticle[]) => {
+                      const fullEmail = buildEmail(
+                        context, 
+                        getHtmlTemplate(), 
+                        getTextTemplate(), 
+                        articles, 
+                        videos);
 
-              const fullEmail = buildEmail(
-                context, 
-                getHtmlTemplate(), 
-                getTextTemplate(), 
-                articles, 
-                videos);
+                      const sentData: {id: string, title: string}[] = 
+                        videos.map(
+                          ({id, title_s}) => { return {id, title: title_s} }
+                        ).concat(articles.map(
+                          ({id, title}) => { return {id, title} }
+                        ))
 
-              sendEmail(fullEmail);
+                      recordAlertSent(context, todayRounded, () => {
+                        recordSentLinks(context, sentData, () => {
+                          sendEmail(fullEmail);
 
-              recordSent(context, videos, articles);*/
-
-              cb();
+                          cb();
+                        });
+                      });
+                  });               
+                });
             }
           )
       }

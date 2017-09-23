@@ -6,15 +6,19 @@ interface IEmailTemplate {
 }
 
 interface IVideo {
+  id: string;
   url_s: string;
   title_s: string;
-  id: string;
   audio_length_f: number;
 }
 
 interface IArticle {
+  id: string;
   url: string;
   title: string;
+  points: number;
+  comments: number;
+  created: string;
 }
 
 interface IAlertTemplate {

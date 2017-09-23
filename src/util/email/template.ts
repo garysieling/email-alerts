@@ -3,7 +3,12 @@ const fs = require("fs");
 
 const querystring = require("querystring");
 
-import { IAlertTemplate, IVideo, IArticle } from './template.type';
+import { 
+  IAlertTemplate, 
+  IVideo, 
+  IArticle,
+  IEmailTemplate
+} from './template.type';
 
 function formatLength(length: number) {
   try {
@@ -30,7 +35,7 @@ function getTextTemplate() {
   return fs.readFileSync("./resources/alerts.txt", "utf-8");
 }
 
-function buildEmail(data: IAlertTemplate, htmlTemplate: string, textTemplate: string, articleRecommendations: IArticle[], videoRecommendations: IVideo[]) {
+function buildEmail(data: IAlertTemplate, htmlTemplate: string, textTemplate: string, articleRecommendations: IArticle[], videoRecommendations: IVideo[]): IEmailTemplate {
   let {email, like, dislike} = data;
 
   let alertId = data.identifier;
@@ -191,13 +196,27 @@ ${articleUrl}
     htmlEmail,
     textEmail,
     email,
-    like
+    subject: "FindLectures resources on " + like
   }
+}
+
+function sendEmail(data: IEmailTemplate) {
+    const postmark = require("postmark");
+    const client = new postmark.Client(process.env.POSTMARK_ID);
+
+    client.sendEmail({
+      "From": "gary@garysieling.com", 
+      "To": data.email, 
+      "Subject": data.subject, 
+      "HtmlBody": data.htmlEmail,
+      "TextBody": data.textEmail 
+    });
 }
 
 export {
   formatLength,
   buildEmail,
   getHtmlTemplate,
-  getTextTemplate
+  getTextTemplate,
+  sendEmail
 }
