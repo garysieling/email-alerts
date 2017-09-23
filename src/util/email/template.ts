@@ -3,31 +3,7 @@ const fs = require("fs");
 
 const querystring = require("querystring");
 
-interface EmailTemplate {
-  htmlEmail: string;
-  textEmail: String;
-  email: string;
-  subject: string;
-}
-
-interface IVideo {
-  url_s: string;
-  title_s: string;
-  id: string;
-  audio_length_f: number;
-}
-
-interface IArticle {
-  url: string;
-  title: string;
-}
-
-interface IAlert {
-  email: string;
-  like: string[];
-  dislike: string[];
-  identifier: string; // GUID
-}
+import { IAlert, IVideo, IArticle } from './template.type';
 
 function formatLength(length: number) {
   try {

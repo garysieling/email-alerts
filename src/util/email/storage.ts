@@ -4,7 +4,9 @@ import * as _ from 'lodash';
 const GoogleSpreadsheet = require("google-spreadsheet");
 const async = require("async"); 
 
-const sentCache: any = {};
+const sentCache: { [key: string]: string[]; } = {};
+
+import { IAlertTemplate } from "./template.type";
 
 function getSpreadsheetId() {
   if (isTesting()) {
@@ -74,7 +76,7 @@ function preloadSent(finalCallback: any) {
   });
 }
 
-function loadSent(email: string, cb: any) {
+function loadSent(email: string, cb: (s: any) => void): void {
   if (_.keys(sentCache).length === 0) {
     preloadSent(() => {
       cb(_.cloneDeep(sentCache[email]) || [])
@@ -85,7 +87,7 @@ function loadSent(email: string, cb: any) {
 }
 
 
-function loadAlerts(rowCallback: any, completionCallback: any) {
+function loadAlerts(rowCallback: any, completionCallback: () => void) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   let sheet: any = null;
   
@@ -110,7 +112,16 @@ function loadAlerts(rowCallback: any, completionCallback: any) {
       }, function( err: any, rows: any ){   
         async.mapSeries(
           rows,
-          (data: any, cb2: any) => rowCallback(cb2, data),
+          (data: any, cb2: (data: IAlertTemplate) => void) => {
+            const alertData: IAlertTemplate = {
+              email: data['email'],
+              like: data['like'],
+              dislike: data['dislike'],
+              identifier: data['identifier']
+            }
+            
+            rowCallback(cb2, alertData);
+          },
           () => step()
         );
       });
