@@ -51,7 +51,7 @@ function main() {
             (sentLinks: string[]) => {
 
               // TODO implement these
-              const videos: IVideo[] = getVideos(context.like, context.dislike, sentLinks);
+              /*const videos: IVideo[] = getVideos(context.like, context.dislike, sentLinks);
               const articles: IArticle[] = getArticles(context.like, context.dislike, sentLinks);
 
               const fullEmail = buildEmail(
@@ -63,7 +63,7 @@ function main() {
 
               sendEmail(fullEmail);
 
-              recordSent(context, videos, articles);
+              recordSent(context, videos, articles);*/
 
               cb();
             }

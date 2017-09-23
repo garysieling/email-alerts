@@ -10,7 +10,8 @@ import {
 } from './rules';
 
 import {
-  IVideo
+  IVideo,
+  IArticle
 } from '../email/template.type'
 
 describe('NoRules - empty string', function() {

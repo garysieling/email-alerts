@@ -43,7 +43,11 @@ describe('Test templating', function() {
           identifier: "emailId",
           email: "",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "",
         "{alertId}",        
@@ -61,7 +65,11 @@ describe('Test templating', function() {
           identifier: "emailId",
           email: "gary.sieling@gmail.com",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "{alertId}",
         "",
@@ -86,7 +94,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "emailId",
           email: "",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "",
         "{links}",        
@@ -113,7 +125,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "emailId",
           email: "gary.sieling@gmail.com",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "{links}",
         "",
@@ -136,7 +152,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "emailId",
           email: "",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "",
         "{emailId}",        
@@ -154,7 +174,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "emailId",
           email: "gary.sieling@gmail.com",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "{emailId}",
         "",
@@ -172,7 +196,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "testID",
           email: "",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "",
         "{unsubscribeUrl}",        
@@ -190,7 +218,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "testID",
           email: "",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "{unsubscribeUrl}",
         "",
@@ -210,7 +242,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "testID",
           email: "gary.sieling@gmail.com",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "",
         "{email} {email}",        
@@ -228,7 +264,11 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           identifier: "testID",
           email: "gary.sieling@gmail.com",
           like: [],
-          dislike: []
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
         },
         "{email} {email}",
         "",

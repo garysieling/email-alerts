@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const querystring = require("querystring");
 
-import { IAlert, IVideo, IArticle } from './template.type';
+import { IAlertTemplate, IVideo, IArticle } from './template.type';
 
 function formatLength(length: number) {
   try {
@@ -30,7 +30,7 @@ function getTextTemplate() {
   return fs.readFileSync("./resources/alerts.txt", "utf-8");
 }
 
-function buildEmail(data: IAlert, htmlTemplate: string, textTemplate: string, articleRecommendations: IArticle[], videoRecommendations: IVideo[]) {
+function buildEmail(data: IAlertTemplate, htmlTemplate: string, textTemplate: string, articleRecommendations: IArticle[], videoRecommendations: IVideo[]) {
   let {email, like, dislike} = data;
 
   let alertId = data.identifier;
