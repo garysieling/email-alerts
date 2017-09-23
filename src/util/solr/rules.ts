@@ -1,7 +1,15 @@
+import * as https from 'https';
+import * as http from 'http';
+
 interface IBoost {
   term: string;
   value: number;
 }
+
+import {
+  IVideo,
+  IArticle
+} from '../email/template.type'
 
 function boostLike(field: string, like: IBoost[]): string {
   if (like) {
@@ -74,8 +82,57 @@ function queryForLikeAndDislike(like: string[], dislike: string[]) {
   }
 }
 
-function getVideos(like: string[], dislike: string[], previouslySent: string[]) {
-  const request = require("ajax-request");
+function getArticleUrl(like: string[], dislike: string[], previouslySent: string[]): any {
+  like = like || [];
+  dislike = dislike || [];
+  previouslySent = previouslySent || [];
+
+  const articleQuery = queryForLikeAndDislike(like, dislike);
+
+  const articleParams = [
+    ["q", articleQuery], 
+    // TODO - quality filtering
+    // TODO - recency
+    // TODO filter "github", "youtube" domains
+    ["rows", "5"],
+    ["wt", "json"],
+    ["fl", "id,title,url"],
+    ["fq", "-domain:\"github.com\""],
+    ["fq", "-domain:\"sourceforge.net\""],
+    ["fq", "-domain:\"codepen.io\""],
+    
+    ["fq", "-domain:\"twitter.com\""],
+
+    ["fq", "-domain:\"youtu.be\""],   
+    ["fq", "-domain:\"youtube.com\""],      
+    ["fq", "-domain:\"soundcloud.com\""],
+    ["fq", "-domain:\"vimeo.com\""],
+
+   // ["fq", "points:[50%20TO%2010000000]"],
+    ["fq", "comments:[10%20TO%2010000000]"]
+  ];
+
+  if (previouslySent.length > 0) {
+    previouslySent.map(
+      (id) => 
+        articleParams.push(
+          ["fq", "-id:" + id]
+        )
+    );    
+  }
+
+  const articleUrl = "/solr/articles/select?" + 
+    articleParams.map( 
+      (tuple) => tuple.join("=") 
+    ).join("&");
+
+  return articleUrl;
+}
+
+function getVideoUrl(like: string[], dislike: string[], previouslySent: string[]): any {
+  like = like || [];
+  dislike = dislike || [];
+  previouslySent = previouslySent || [];
 
   const videoQuery = queryForLikeAndDislike(like, dislike);
   const videoParams = [
@@ -97,25 +154,69 @@ function getVideos(like: string[], dislike: string[], previouslySent: string[]) 
     );    
   }
 
-  console.log(JSON.stringify(previouslySent, null, 2));
-
-  const videoUrl = "https://www.findlectures.com/select?" + 
+  const videoUrl = "/select?" + 
     videoParams.map( 
       (tuple) => tuple.join("=") 
     ).join("&");
 
-  
-
+  return videoUrl;
 }
 
-function getArticles() {
+function getVideos(like: string[], dislike: string[], previouslySent: string[], cb: (data: IVideo[]) => void): any {
+  const options = {
+    host: 'findlectures.com',
+    port: '80',
+    path: getVideoUrl(like, dislike, previouslySent),
+    method: 'GET'
+  };
 
+  let data = '';
+  const req = https.request(options, function(res) {
+    res.on('data', (d) => {
+      data += d;
+    });
+
+    res.on('end', 
+      () => {
+        let videos: IVideo[] = JSON.parse(data);
+        cb(videos);
+      }
+    );
+  });
+
+  req.end();    
+}
+
+function getArticles(like: string[], dislike: string[], previouslySent: string[], cb: (data: IArticle[]) => void): any {
+  const options = {
+    host: process.env.SOLR_URL,
+    port: '80',
+    path: getArticleUrl(like, dislike, previouslySent),
+    method: 'GET'
+  };
+
+  let data = '';
+  const req = http.request(options, function(res) {
+    res.on('data', (d) => {
+      data += d;
+    });
+
+    res.on('end', 
+      () => {
+        let articles: IArticle[] = JSON.parse(data);
+        cb(articles);
+      }
+    );
+  });
+
+  req.end();    
 }
 
 export {
   queryForLikeAndDislike,
   boostLike,
   boostDislike,
+  getVideoUrl,
   getVideos,
   getArticles
 }

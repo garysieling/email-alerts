@@ -3,8 +3,15 @@ const assert = require('assert');
 import { 
   queryForLikeAndDislike,
   boostLike,
-  boostDislike
+  boostDislike,
+  getVideoUrl,
+  getVideos,
+  getArticles
 } from './rules';
+
+import {
+  IVideo
+} from '../email/template.type'
 
 describe('NoRules - empty string', function() {
   describe('#queryForLikeAndDislike()', function() {
@@ -103,5 +110,31 @@ describe('boost - dislike', function() {
           value: 0.1
         }]));
     });
+  });
+});
+
+describe('videos', function() {
+  it('could get videos', function() {
+    assert.equal(`/select?q="python"&fq=has_content_b%3Atrue&fq=audio_length_f:[1200%20TO%203600]&fq=total_quality_f:[0%20TO%2010000]&rows=3&wt=json&fl=id,title_s,audio_length_f,description_txt_en,url_s`, getVideoUrl(["python"], null, null));
+  });
+});
+
+describe('videos', function() {
+  it('gets videos', function() {
+    getVideos(["python"], null, null,
+      (videos: IVideo[]) => {
+        assert.equal(true, videos.length > 0)
+      }
+    )    
+  });
+});
+
+describe('articles', function() {
+  it('gets articles', function() {
+    getArticles(["python"], null, null,
+      (videos: IArticle[]) => {
+        assert.equal(true, videos.length > 0)
+      }
+    )    
   });
 });
