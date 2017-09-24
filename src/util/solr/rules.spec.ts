@@ -123,6 +123,7 @@ describe('videos', function() {
 describe('videos', function() {
   it('gets videos', function() {
     getVideos(["python"], null, null,
+      console.log,
       (error: Error, videos: IVideo[]) => {
         assert.equal(true, videos.length > 0)
       }
@@ -133,6 +134,7 @@ describe('videos', function() {
 describe('articles', function() {
   it('gets articles', function() {
     getArticles(["python"], null, null,
+      console.log,
       (error: Error, videos: IArticle[]) => {
         assert.equal(true, videos.length > 0)
       }

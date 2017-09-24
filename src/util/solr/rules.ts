@@ -178,6 +178,7 @@ function getVideos(
   like: string[], 
   dislike: string[], 
   previouslySent: string[], 
+  log: (a: string, b: string) => void,
   cb: (error: Error, data: IVideo[]) => void
 ): any {
   const options = {
@@ -189,7 +190,7 @@ function getVideos(
 
   let data = '';
 
-  console.log('getVideos', options.host + options.path);
+  log('getVideos', options.host + options.path);
 
   const req = https.request(options, function(res) {
     res.on('data', (d) => {
@@ -221,6 +222,7 @@ function getArticles(
   like: string[], 
   dislike: string[], 
   previouslySent: string[], 
+  log: (a: string, b: string) => void,
   cb: (error: Error, data: IArticle[]
 ) => void): any {
   const options = {
@@ -230,7 +232,7 @@ function getArticles(
     method: 'GET'
   };
 
-  console.log('getArticles', 'http://' + options.host + ':8983' + options.path);
+  log('getArticles', 'http://' + options.host + ':8983' + options.path);
 
   let data = '';
   const req = http.request(options, function(res) {

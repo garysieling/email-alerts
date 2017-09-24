@@ -61,6 +61,7 @@ function main() {
               log('loadSent', sentLinks.length);
 
               getVideos(context.like, context.dislike, sentLinks,
+                console.log,
                 (error: Error, videos: IVideo[]) => {
                   if (error) {
                     console.log('getVideos - error', error);
@@ -70,6 +71,7 @@ function main() {
                     log('getVideos', videos.length);
 
                     getArticles(context.like, context.dislike, sentLinks,
+                      console.log,
                       (error: Error, articles: IArticle[]) => {
                         if (error) {
                           console.log('getArticles - error', error);
