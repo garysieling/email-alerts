@@ -9,8 +9,9 @@ import {
 describe('Test for sent emails', function() {
   it('is can retrieve data', function(done) {
     loadSent('gary.sieling@gmail.com', 
-      (data: any) => {
-          assert.equal(true, data.includes('87159'));
+      (data: string[]) => {
+        console.log(data);
+          assert.equal(true, _.includes(data, '87159'));
 
           done();
         });
