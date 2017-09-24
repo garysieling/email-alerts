@@ -94,6 +94,7 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
     ["qf", "article"],
     ["defType", "edismax"],
     ["q", articleQuery], 
+    ["bf", "add(log(add(10,comments,points)),log(sub(weekoftime,104920)))"],
     // TODO - quality filtering
     // TODO - recency
     // TODO filter "github", "youtube" domains
