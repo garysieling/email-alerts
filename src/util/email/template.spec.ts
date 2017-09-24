@@ -57,8 +57,125 @@ describe('Test templating', function() {
     );
   });
 
+  it('text template includes article title', function() {
+    assert.equal(
+      true,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "",
+        "{links}",        
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).textEmail.indexOf("ATESTTITLE") >= 0
+    );
+  });
+  
+  it('text template includes article url', function() {
+    assert.equal(
+      true,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "",
+        "{links}",        
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).textEmail.indexOf("ATESTURL") >= 0
+    );
+  });
+  
+
+  it('htmlEmail template includes article title', function() {
+    assert.equal(
+      true,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "{links}",  
+        "",      
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).htmlEmail.indexOf("ATESTTITLE") >= 0
+    );
+  });
+  
+  it('htmlEmail template includes article url', function() {
+    assert.equal(
+      true,
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: [],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "{links}",     
+        "",   
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).htmlEmail.indexOf("ATESTURL") >= 0
+    );
+  });
+
   it('html template includes includes alertId', function() {
-  assert.equal(
+    assert.equal(
       "emailId", 
       buildEmail(
         {
@@ -115,7 +232,7 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
 
   it('html template includes includes title', function() {
   assert.equal(
-      `<h1>Videos</h1><strong>
+      `<h2>Videos</h2><strong>
 <a href="https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=gary.sieling%40gmail.com&emailId=12345&alertId=emailId">Title (1 minute)</a>
 </strong><br />
 <br />

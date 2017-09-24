@@ -8,7 +8,7 @@ const sentCache: { [key: string]: string[]; } = {};
 
 import { IAlertTemplate } from "./template.type";
 
-function getSpreadsheetId() {
+function getSpreadsheetId(): string {
   if (isTesting()) {
     return process.env.TESTING_SPREADSHEET;
   } else {
@@ -86,7 +86,10 @@ function loadSent(email: string, cb: (s: String[]) => void): void {
 }
 
 
-function loadAlerts(rowCallback: any, completionCallback: () => void) {
+function loadAlerts(
+  rowCallback: (cb: any, context: IAlertTemplate) => void, 
+  completionCallback: () => void
+) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   let sheet: any = null;
   
@@ -96,7 +99,10 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
     },
     function getInfoAndWorksheets(step: any) {
       doc.getInfo(function(err: any, info: any) {
-        console.log(err);
+        if (err) {
+          console.log("Error", err);
+        }
+        
         //console.log(JSON.stringify(info, null, 2));
         sheet = info.worksheets[0];
         //console.log("sheet 1: "+sheet.title+" "+sheet.rowCount+"x"+sheet.colCount);
@@ -131,7 +137,7 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
     }
   ], function(err: any) {
     if (err) {
-      console.log("Error: "+ err);
+      console.log("Error", err);
     }
 
     completionCallback();
@@ -139,7 +145,12 @@ function loadAlerts(rowCallback: any, completionCallback: () => void) {
 
 }
 
-function updateSheet(sheetName: String, worksheetName: String, data: any, cb: () => void) {
+function updateSheet(
+  sheetName: String, 
+  worksheetName: String, 
+  data: any, 
+  cb: () => void
+) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   
   let sheetId = null;
@@ -147,16 +158,17 @@ function updateSheet(sheetName: String, worksheetName: String, data: any, cb: ()
 
   async.series([
     function setAuth(step: any) {
-      // see notes below for authentication instructions! 
-      //var creds = require('./google-generated-creds.json');
-      // OR, if you cannot save the file locally (like on heroku) 
+      console.log('updateSheet - setAuth');
       var creds_json = getAuthentication();  
       doc.useServiceAccountAuth(creds_json, step);
     },
     function getInfoAndWorksheets(step: any) {
+      console.log('updateSheet - getInfoAndWorksheets');
       doc.getInfo(function(err: any, info: any) {
-        console.log(err);
-        //console.log(JSON.stringify(info, null, 2));
+        if (err) {
+          console.log("updateSheet", err);
+        }
+
         sheetId = _.findIndex(info.worksheets,
           (worksheet: any) => worksheet.title === worksheetName
         ); 
@@ -167,6 +179,8 @@ function updateSheet(sheetName: String, worksheetName: String, data: any, cb: ()
     },
    
     function workingWithCells(step: any) {
+      console.log('updateSheet - workingWithCells');
+
       sheet.getRows({
         query: "identifier = " + data.identifier + ""
       }, function( err: any, rows: any ){
@@ -185,9 +199,11 @@ function updateSheet(sheetName: String, worksheetName: String, data: any, cb: ()
         step();
       });
     }
-  ], function(err: any){
+  ], function(err: any) {
+    console.log('updateSheet - complete');
+    
     if (err) {
-      console.log('Error: '+err);
+      console.log('updateSheet Error' + err);
     }
 
     if (cb) {
@@ -196,18 +212,24 @@ function updateSheet(sheetName: String, worksheetName: String, data: any, cb: ()
   });
 }
 
-function saveRows(cb: () => void, spreadsheet: any, sheet: any, data: any) {
+function saveRows(spreadsheet: string, sheet: string, data: any, cb: () => void) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   let sheetId: Number;
 
   async.series([
     function setAuth(step: any) {
+      console.log("saveRows - setAuth");
+
       const creds_json = getAuthentication();
       doc.useServiceAccountAuth(creds_json, step);
     },
     function getInfoAndWorksheets(step: any) {
+      console.log("saveRows - getInfoAndWorksheets");
+
       doc.getInfo(function(err: any, info: any) {
-        console.log(err);
+        if (err) {
+          console.log("saveRows - getInfoAndWorksheets - getInfo", err);
+        }
         //console.log(JSON.stringify(info, null, 2));
         sheetId = _.findIndex(info.worksheets,
           (worksheet: any) => worksheet['title'] === sheet
@@ -219,19 +241,29 @@ function saveRows(cb: () => void, spreadsheet: any, sheet: any, data: any) {
       });
     },   
     function saveRows(step: any) {
+      console.log("saveRows - saveRows");
+
       async.mapSeries(
         data,
-        (row: any, cb: any) => doc.addRow(
+        (row: any, cb: () => void) => doc.addRow(
           sheetId, row, function(err: any, row: any) {
+            console.log("saveRows - saveRows");
             //console.log(err);
             //console.log(JSON.stringify(row, null, 2));         
-
             cb();
           }), 
           step
       );      
     }
   ], function(err: any){
+    console.log("saveRows - complete");
+
+    if (err) {
+      console.log("saveRows - complete", err)
+    }
+
+    cb();
+
     if (err) {
       console.log("Error: "+err);
     }
@@ -247,14 +279,15 @@ function recordAlertSent(context: IAlertTemplate, todayRounded: String, cb: () =
   }, cb);
 }
 
-function recordSentLinks(context: any, sent: {id: string, title: string}[], completionCallback: () => void) {
+function recordSentLinks(
+  context: IAlertTemplate, 
+  sent: {id: string, title: string}[], 
+  completionCallback: () => void
+) {
   const doc = new GoogleSpreadsheet(getSpreadsheetId());
   const sentIds = sent.map( (sent: {id: string}) => sent.id );
   
-  saveRows(
-    () => {
-      //console.log("saved sent rows");
-    },
+  saveRows(    
     getSpreadsheetId(),
     "Sent",
     sent.map(
@@ -264,7 +297,11 @@ function recordSentLinks(context: any, sent: {id: string, title: string}[], comp
           Title: row.title
         });
       }
-    )
+    ),
+    () => {
+      console.log("recordSentLinks - complete");
+      completionCallback();
+    },
   );
 
   const emailAddress = context.email;

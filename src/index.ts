@@ -39,52 +39,94 @@ function sendAlert() {
 }
 
 function main() {
+  const log = console.log;
   // initialize once, so that if this takes more than a day, it won't clip those people
   const startTime: Date = new Date();
 
-  console.log('main');
+  log('main');
   let todayRounded = getDayOfTime(startTime) + "";
 
   // TODO: this would be better as promises
   loadAlerts(
     (cb: any, context: IAlertTemplate) => {
-      // TODO this needs to convert what's in the spreadsheet to dates
+      log('alerts loaded', context.email, context.identifier)
+      // TODO this needs ;to convert what's in the spreadsheet to dates
       if (!context.unsubscribed && 
           isEligible(startTime, context.lastSent, context.lastEligible)) {
+        log('isEligible', context.email, context.identifier);
+
         loadSent(
             context.email,
             (sentLinks: string[]) => {
+              log('loadSent', sentLinks.length);
 
-              // TODO implement these
               getVideos(context.like, context.dislike, sentLinks,
-                (videos: IVideo[]) => {
-                  getArticles(context.like, context.dislike, sentLinks,
-                    (articles: IArticle[]) => {
-                      const fullEmail = buildEmail(
-                        context, 
-                        getHtmlTemplate(), 
-                        getTextTemplate(), 
-                        articles, 
-                        videos);
+                (error: Error, videos: IVideo[]) => {
+                  if (error) {
+                    console.log('getVideos - error', error);
 
-                      const sentData: {id: string, title: string}[] = 
-                        videos.map(
-                          ({id, title_s}) => { return {id, title: title_s} }
-                        ).concat(articles.map(
-                          ({id, title}) => { return {id, title} }
-                        ))
+                    cb();
+                  } else {
+                    log('getVideos', videos.length);
 
-                      recordAlertSent(context, todayRounded, () => {
-                        recordSentLinks(context, sentData, () => {
-                          sendEmail(fullEmail);
+                    getArticles(context.like, context.dislike, sentLinks,
+                      (error: Error, articles: IArticle[]) => {
+                        if (error) {
+                          console.log('getArticles - error', error);
 
                           cb();
-                        });
-                      });
-                  });               
+                        } else {
+                          log(getArticles, articles.length);
+
+                          const fullEmail = buildEmail(
+                            context, 
+                            getHtmlTemplate(), 
+                            getTextTemplate(), 
+                            articles, 
+                            videos);
+
+                          const sentData: {id: string, title: string}[] = 
+                            _.map(
+                              videos,
+                              (video: IVideo) => {
+                                return {
+                                  id: video.id, 
+                                  title: video.title_s
+                                } 
+                              }
+                            ).concat(
+                              _.map(
+                                articles,
+                                (article: IArticle) => { 
+                                  return {
+                                    id: article.cleanUrl, 
+                                    title: article.title
+                                  } 
+                                }
+                              )
+                            );
+
+                          recordAlertSent(context, todayRounded, () => {
+                            log('recordAlertSent', context.email, context.identifier);
+
+                            recordSentLinks(context, sentData, () => {
+                              log('recordSentLinks', context.email, context.identifier)
+
+                              sendEmail(fullEmail);
+
+                              log('email should be sent');
+
+                              cb();
+                            });
+                          });
+                        }
+                      });   
+                  }            
                 });
             }
           )
+      } else {
+        cb();
       }
     }, 
     () => {

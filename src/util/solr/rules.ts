@@ -1,5 +1,6 @@
 import * as https from 'https';
 import * as http from 'http';
+import * as _ from 'lodash';
 
 interface IBoost {
   term: string;
@@ -90,13 +91,15 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
   const articleQuery = queryForLikeAndDislike(like, dislike);
 
   const articleParams = [
+    ["qf", "article"],
+    ["defType", "edismax"],
     ["q", articleQuery], 
     // TODO - quality filtering
     // TODO - recency
     // TODO filter "github", "youtube" domains
     ["rows", "5"],
     ["wt", "json"],
-    ["fl", "id,title,url"],
+    ["fl", "cleanUrl,title,url"],
     ["fq", "-domain:\"github.com\""],
     ["fq", "-domain:\"sourceforge.net\""],
     ["fq", "-domain:\"codepen.io\""],
@@ -113,10 +116,12 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
   ];
 
   if (previouslySent.length > 0) {
-    previouslySent.map(
+    previouslySent.filter(
+      (value) => value !== ""
+    ).map(
       (id) => 
         articleParams.push(
-          ["fq", "-id:" + id]
+          ['fq', '-cleanUrl:"' + id + '"']
         )
     );    
   }
@@ -129,7 +134,11 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
   return articleUrl;
 }
 
-function getVideoUrl(like: string[], dislike: string[], previouslySent: string[]): any {
+function getVideoUrl(
+  like: string[], 
+  dislike: string[], 
+  previouslySent: string[]
+): any {
   like = like || [];
   dislike = dislike || [];
   previouslySent = previouslySent || [];
@@ -146,10 +155,12 @@ function getVideoUrl(like: string[], dislike: string[], previouslySent: string[]
   ];
 
   if (previouslySent.length > 0) {
-    previouslySent.map(
+    _.uniq(previouslySent).filter(
+      (value) => value !== ""
+    ).map(
       (id) => 
         videoParams.push(
-          ["fq", "-id:" + id]
+          ['fq', '-id:"' + id + '"']
         )
     );    
   }
@@ -162,15 +173,23 @@ function getVideoUrl(like: string[], dislike: string[], previouslySent: string[]
   return videoUrl;
 }
 
-function getVideos(like: string[], dislike: string[], previouslySent: string[], cb: (data: IVideo[]) => void): any {
+function getVideos(
+  like: string[], 
+  dislike: string[], 
+  previouslySent: string[], 
+  cb: (error: Error, data: IVideo[]) => void
+): any {
   const options = {
-    host: 'findlectures.com',
-    port: '80',
+    host: 'www.findlectures.com',
+    port: '443',
     path: getVideoUrl(like, dislike, previouslySent),
     method: 'GET'
   };
 
   let data = '';
+
+  console.log('getVideos', options.host + options.path);
+
   const req = https.request(options, function(res) {
     res.on('data', (d) => {
       data += d;
@@ -178,22 +197,39 @@ function getVideos(like: string[], dislike: string[], previouslySent: string[], 
 
     res.on('end', 
       () => {
-        let videos: IVideo[] = JSON.parse(data);
-        cb(videos);
+        const response = JSON.parse(data);
+
+        if (response.error) {
+          cb(new Error(JSON.stringify(response.error, null, 2)), null);
+        } else {
+          let videos: IVideo[] = response.response.docs;
+          cb(null, videos);
+        }
       }
     );
+
+    res.on('error', (error: Error) => {
+      cb(error, null);
+    })
   });
 
   req.end();    
 }
 
-function getArticles(like: string[], dislike: string[], previouslySent: string[], cb: (data: IArticle[]) => void): any {
+function getArticles(
+  like: string[], 
+  dislike: string[], 
+  previouslySent: string[], 
+  cb: (error: Error, data: IArticle[]
+) => void): any {
   const options = {
     host: process.env.SOLR_URL,
-    port: '80',
+    port: '8983',
     path: getArticleUrl(like, dislike, previouslySent),
     method: 'GET'
   };
+
+  console.log('getArticles', 'http://' + options.host + ':8983' + options.path);
 
   let data = '';
   const req = http.request(options, function(res) {
@@ -203,8 +239,19 @@ function getArticles(like: string[], dislike: string[], previouslySent: string[]
 
     res.on('end', 
       () => {
-        let articles: IArticle[] = JSON.parse(data);
-        cb(articles);
+        const response = JSON.parse(data);
+        if (response.error) {
+          cb(new Error(JSON.stringify(response.error, null, 2)), null);
+        } else {
+          let articles: IArticle[] = response.response.docs;
+          cb(null, articles);
+        }
+      }
+    );
+
+    res.on('error',
+      (error: Error) => {
+        cb(error, null);
       }
     );
   });

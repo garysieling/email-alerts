@@ -13,7 +13,7 @@ interface IVideo {
 }
 
 interface IArticle {
-  id: string;
+  cleanUrl: string;
   url: string;
   title: string;
   points: number;
