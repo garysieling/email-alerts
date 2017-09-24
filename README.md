@@ -10,3 +10,6 @@ To use this, you need the following:
 - Google spreadsheet
 - Service account for Google Spreadsheet
 - Share Google spreadsheet with the service account
+
+Use this plugin to improve ranking:
+https://github.com/DiceTechJobs/RelevancyFeedback

@@ -1,0 +1,3 @@
+[submodule "RelevancyFeedback"]
+	path = RelevancyFeedback
+	url = https://github.com/garysieling/RelevancyFeedback
