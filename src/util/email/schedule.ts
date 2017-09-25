@@ -26,13 +26,9 @@ function isEligible(testDay: Date, lastSent?: Date, lastEligible?: Date) {
   let todayRounded = getDayOfTime(testDay);
 
   // if today is monday  
-  //console.log(testDay.getDay(), testDay.getHours(), lastMonday, todayRounded);
+  //console.log(testDay.getDay(), testDay.getHours(), lastMonday, todayRounded, lastSent, lastSent.getDay());
   if (testDay.getDay() === 1 && testDay.getHours() >= 9) {
     if (todayRounded - lastMonday >= 7) {
-      eligible = true;
-    }
-  } else {
-    if (lastSent && lastSent.getDay() != 1) {
       eligible = true;
     }
   }
