@@ -51,9 +51,11 @@ function main() {
     (cb: any, context: IAlertTemplate) => {
       log('alerts loaded', context.email, context.identifier)
       // TODO this needs ;to convert what's in the spreadsheet to dates
+      const eligible = isEligible(startTime, context.lastSent, context.lastEligible)
+      log('isEligible', context.email, context.identifier, eligible);
+      
       if (!context.unsubscribed && 
-          isEligible(startTime, context.lastSent, context.lastEligible)) {
-        log('isEligible', context.email, context.identifier);
+          eligible) {
 
         loadSent(
             context.email,
