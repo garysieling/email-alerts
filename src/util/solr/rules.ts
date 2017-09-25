@@ -136,6 +136,14 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
   return articleUrl;
 }
 
+function normalize(queries: string[]) {
+  return queries.map(
+    (q) => q.replace(/%/g, "")
+  ).filter(
+    (q) => q !== ""
+  )
+}
+
 function getVideoUrl(
   like: string[], 
   dislike: string[], 
@@ -145,7 +153,10 @@ function getVideoUrl(
   dislike = dislike || [];
   previouslySent = previouslySent || [];
 
-  const videoQuery = queryForLikeAndDislike(like, dislike);
+  const videoQuery = queryForLikeAndDislike(
+    normalize(like), 
+    normalize(dislike)
+  );
   const videoParams = [
     //["qf", "article"],
     ["defType", "edismax"],

@@ -131,6 +131,19 @@ describe('videos', function() {
   });
 });
 
+describe('videos', function() {
+  it('gets videos without crashing', function() {
+    getVideos(
+      "javascript,%eh,%remaining%,%,hghhgghghgh,python,machine learning,cryptocurrency,machine learning,machine learning,graphic design,india,graphic design".split(","), 
+      "%ah,politics,politics".split(","), null,
+      console.log,
+      (error: Error, videos: IVideo[]) => {
+        assert.equal(true, videos.length > 0)
+      }
+    )    
+  });
+});
+
 describe('articles', function() {
   it('gets articles', function() {
     getArticles(["python"], null, null,
