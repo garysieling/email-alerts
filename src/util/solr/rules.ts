@@ -1,4 +1,3 @@
-import * as https from 'https';
 import * as http from 'http';
 import * as _ from 'lodash';
 
@@ -93,12 +92,14 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
   const articleParams = [
     ["qf", "article"],
     ["defType", "edismax"],
-    ["q", articleQuery], 
-    ["bf", "add(log(add(10,comments,points)),log(sub(weekoftime,104920)))"],
+    ["rf.q", articleQuery], 
+    ["q:*:*"],
+    ["df", "title"],
+    //["bf", "add(log(add(10,comments,points)),log(sub(weekoftime,104920)))"],
     // TODO - quality filtering
     // TODO - recency
     // TODO filter "github", "youtube" domains
-    ["rows", "5"],
+   // ["rows", "5"],
     ["wt", "json"],
     ["fl", "cleanUrl,title,url"],
     ["fq", "-domain:\"github.com\""],
@@ -113,7 +114,7 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
     ["fq", "-domain:\"vimeo.com\""],
 
    // ["fq", "points:[50%20TO%2010000000]"],
-    ["fq", "comments:[10%20TO%2010000000]"]
+   // ["fq", "comments:[10%20TO%2010000000]"]
   ];
 
   if (previouslySent.length > 0) {
@@ -127,7 +128,7 @@ function getArticleUrl(like: string[], dislike: string[], previouslySent: string
     );    
   }
 
-  const articleUrl = "/solr/articles/select?" + 
+  const articleUrl = "/solr/articles/rf?" + 
     articleParams.map( 
       (tuple) => tuple.join("=") 
     ).join("&");
@@ -146,7 +147,11 @@ function getVideoUrl(
 
   const videoQuery = queryForLikeAndDislike(like, dislike);
   const videoParams = [
-    ["q", videoQuery], 
+    //["qf", "article"],
+    ["defType", "edismax"],
+    ["rf.q", videoQuery], 
+    ["q:*:*"],
+    ["df", "title_s"],    
     ["fq", "has_content_b%3Atrue"], 
     ["fq", "audio_length_f:[1200%20TO%203600]"],
     ["fq", "total_quality_f:[0%20TO%2010000]"],
@@ -166,7 +171,7 @@ function getVideoUrl(
     );    
   }
 
-  const videoUrl = "/select?" + 
+  const videoUrl = "/solr/talks/rf?" + 
     videoParams.map( 
       (tuple) => tuple.join("=") 
     ).join("&");
@@ -182,17 +187,19 @@ function getVideos(
   cb: (error: Error, data: IVideo[]) => void
 ): any {
   const options = {
-    host: 'www.findlectures.com',
-    port: '443',
+    host: process.env.SOLR_URL,
+    port: '8983',
     path: getVideoUrl(like, dislike, previouslySent),
     method: 'GET'
   };
 
   let data = '';
 
-  log('getVideos', options.host + options.path);
+  console.log('getVideos', options.host + options.path);
 
-  const req = https.request(options, function(res) {
+  const maxVideos = 3;
+
+  const req = http.request(options, function(res) {
     res.on('data', (d) => {
       data += d;
     });
@@ -201,11 +208,11 @@ function getVideos(
       () => {
         const response = JSON.parse(data);
 
-        if (response.error) {
-          cb(new Error(JSON.stringify(response.error, null, 2)), null);
-        } else {
-          let videos: IVideo[] = response.response.docs;
+        if (response.match) {
+          let videos: IVideo[] = _.take(response.match.docs, maxVideos);
           cb(null, videos);
+        } else {
+          cb(new Error(JSON.stringify(response.error, null, 2)), null);
         }
       }
     );
@@ -232,7 +239,9 @@ function getArticles(
     method: 'GET'
   };
 
-  log('getArticles', 'http://' + options.host + ':8983' + options.path);
+  console.log('getArticles', 'http://' + options.host + ':8983' + options.path);
+
+  const maxArticles = 7;
 
   let data = '';
   const req = http.request(options, function(res) {
@@ -243,11 +252,11 @@ function getArticles(
     res.on('end', 
       () => {
         const response = JSON.parse(data);
-        if (response.error) {
-          cb(new Error(JSON.stringify(response.error, null, 2)), null);
-        } else {
-          let articles: IArticle[] = response.response.docs;
+        if (response.match) {
+          let articles: IArticle[] = _.take(response.match.docs, maxArticles);
           cb(null, articles);
+        } else {
+          cb(new Error(JSON.stringify(response.error, null, 2)), null);          
         }
       }
     );
