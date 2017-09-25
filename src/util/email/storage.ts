@@ -118,15 +118,18 @@ function loadAlerts(
         async.mapSeries(
           rows,
           (data: any, cb2: (data: IAlertTemplate) => void) => {
+            const lastSent = parseInt(data['lastsent']);
+            const lastEligible = parseInt(data['lasteligible']);
+
             const alertData: IAlertTemplate = {
               email: data['email'],
               like: (data['like'] || '').split(","),
               dislike: (data['dislike'] || '').split(","),
               identifier: data['identifier'],
               unsubscribed: !!data['unsubscribed'],
-              lastSent: new Date(parseInt(data['lastsent'])),
+              lastSent: lastSent ? new Date(lastSent) : null,
               created: new Date(parseInt(data['created'])),
-              lastEligible: new Date(parseInt(data['lasteligible']) * 24 * 3600 * 1000)
+              lastEligible: lastEligible ? new Date(lastEligible * 24 * 3600 * 1000) : null
             }
             
             rowCallback(cb2, alertData);

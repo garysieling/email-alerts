@@ -31,6 +31,8 @@ function isEligible(testDay: Date, lastSent?: Date, lastEligible?: Date) {
     if (todayRounded - lastMonday >= 7) {
       eligible = true;
     }
+  } else {
+    
   }
 
   return eligible;
