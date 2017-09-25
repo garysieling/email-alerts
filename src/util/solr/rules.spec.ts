@@ -116,7 +116,7 @@ describe('boost - dislike', function() {
 
 describe('videos', function() {
   it('could get videos', function() {
-    assert.equal(`/select?q="python"&fq=has_content_b%3Atrue&fq=audio_length_f:[1200%20TO%203600]&fq=total_quality_f:[0%20TO%2010000]&rows=3&wt=json&fl=id,title_s,audio_length_f,description_txt_en,url_s`, getVideoUrl(["python"], null, null));
+    assert.equal(`/solr/talks/rf?defType=edismax&rf.q="python"&q:*:*&df=title_s&fq=has_content_b%3Atrue&fq=audio_length_f:[1200%20TO%203600]&fq=total_quality_f:[0%20TO%2010000]&rows=3&wt=json&fl=id,title_s,audio_length_f,description_txt_en,url_s`, getVideoUrl(["python"], null, null));
   });
 });
 
