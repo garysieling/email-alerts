@@ -83,8 +83,8 @@ function queryForLikeAndDislike(like: string[], dislike: string[]) {
 }
 
 function getArticleUrl(like: string[], dislike: string[], previouslySent: string[]): any {
-  like = like || [];
-  dislike = dislike || [];
+  like = normalize(like || []);
+  dislike = normalize(dislike || []);
   previouslySent = previouslySent || [];
 
   const articleQuery = queryForLikeAndDislike(like, dislike);

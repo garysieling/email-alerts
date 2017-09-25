@@ -146,7 +146,23 @@ describe('videos', function() {
 
 describe('articles', function() {
   it('gets articles', function() {
-    getArticles(["python"], null, null,
+    getArticles(["python"], 
+      null, 
+      null,
+      console.log,
+      (error: Error, videos: IArticle[]) => {
+        assert.equal(true, videos.length > 0)
+      }
+    )    
+  });
+});
+
+describe('articles', function() {
+  it('gets articles without crashing', function() {
+    getArticles(
+      "javascript,%eh,%remaining%,%,hghhgghghgh,python,machine learning,cryptocurrency,machine learning,machine learning,graphic design,india,graphic design".split(","), 
+      "%ah,politics,politics".split(","), 
+      null,
       console.log,
       (error: Error, videos: IArticle[]) => {
         assert.equal(true, videos.length > 0)
