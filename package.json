@@ -32,7 +32,7 @@
     "google-spreadsheet": "^2.0.4",
     "guid": "0.0.12",
     "lodash": "^4.17.4",
-    "postmark": "^1.4.1",
+    "mailgun-js": "^0.13.1",
     "sqlite3": "^3.1.9"
   }
 }

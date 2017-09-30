@@ -170,3 +170,46 @@ describe('articles', function() {
     )    
   });
 });
+
+describe('articles', function() {
+  it('gets articles without crashing if no possible answers', function() {
+    getArticles(
+      "javascriptehremaininghghhgghghghpythonmachinelearningcryptocurrency".split(","), 
+      "ahpoliticspolitics".split(","), 
+      null,
+      console.log,
+      (error: Error, videos: IArticle[]) => {
+        assert.equal(true, videos.length == 0)
+      }
+    )    
+  });
+});
+
+describe('videos', function() {
+  it('gets videos without crashing if no possible answers', function() {
+    getVideos(
+      "javascriptehremaininghghhgghghghpythonmachinelearningcryptocurrency".split(","), 
+      "ahpoliticspolitics".split(","), 
+      null,
+      console.log,
+      (error: Error, videos: IVideo[]) => {
+        assert.equal(true, videos.length == 0)
+      }
+    )    
+  });
+});
+
+
+describe('videos', function() {
+  it('gets handles solr', function() {
+    getVideos(
+      "solr".split(","), 
+      [], 
+      null,
+      console.log,
+      (error: Error, videos: IVideo[]) => {
+        assert.equal(true, videos.length == 0)
+      }
+    )    
+  });
+});
