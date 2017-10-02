@@ -48,6 +48,8 @@ function buildEmail(
   let alertId = data.identifier;
   let emailId = Guid.create().value.replace(/-/g, "");
 
+  let keywords = data.like.join(", ");
+
   const context = {
     AlertID: alertId,
     EmailID: emailId,
@@ -104,17 +106,6 @@ function buildEmail(
 `;
          }).join("");
 
-      const links = 
-        "<h2>Videos</h2>" + 
-        htmlVideoLinks +
-        (
-          (htmlArticleLinks.length > 0) ? (
-            "<br />" + 
-            "<h2>Articles</h2>" + 
-            htmlArticleLinks
-          ) : ""
-        );
-
       const htmlEmail = htmlTemplate.replace(
           /{alertId}/g,
           alertId
@@ -128,11 +119,17 @@ function buildEmail(
           /{emailId}/g,
           emailId
         ).replace(
-          /{links}/g, 
-          links
-      );
+          /{articles}/g, 
+          htmlArticleLinks
+        ).replace(
+          /{videos}/g, 
+          htmlVideoLinks
+        ).replace(
+          /{keywords}/g,
+          keywords
+        );
 
-      const videoLinks = "Videos\n\n" + _.map(
+      const videoLinks = _.map(
         videoRecommendations,
         (video: IVideo, index: number, array: IVideo[]) => {
           const talkUrl = 
@@ -178,10 +175,14 @@ ${article.url}
         /{email}/g,
           email
       ).replace(
-        /{links}/g, 
-        videoLinks + (
-          articleLinks.length > 0 ? ("\nArticles\n\n" + articleLinks) : ""
-        )
+        /{videos}/g, 
+        videoLinks
+      ).replace(
+        /{articles}/g, 
+        articleLinks
+      ).replace(
+        /{keywords}/g,
+        keywords
       );
       
   return {

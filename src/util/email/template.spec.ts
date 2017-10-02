@@ -72,7 +72,7 @@ describe('Test templating', function() {
           unsubscribed: false
         },
         "",
-        "{links}",        
+        "{articles}",        
         [{
           points: 0,
           comments: 0,
@@ -85,6 +85,66 @@ describe('Test templating', function() {
       ).textEmail.indexOf("ATESTTITLE") >= 0
     );
   });
+
+  it('text template replaces keywords', function() {
+    assert.equal(
+      "a, test",
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: ["a", "test"],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "",
+        "{keywords}",        
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).textEmail
+    );
+  });
+
+   it('html template replaces keywords', function() {
+    assert.equal(
+      "a, test",
+      buildEmail(
+        {
+          identifier: "emailId",
+          email: "",
+          like: ["a", "test"],
+          dislike: [],
+          lastEligible: null,
+          created: null,
+          lastSent: null,
+          unsubscribed: false
+        },
+        "{keywords}",        
+        "",
+        [{
+          points: 0,
+          comments: 0,
+          created: "",
+          title: "ATESTTITLE",
+          cleanUrl: "ATESTCLEANURL",
+          url: "ATESTURL"
+        }],
+        []
+      ).htmlEmail
+    );
+  });
+
+
   
   it('text template includes article url', function() {
     assert.equal(
@@ -101,7 +161,7 @@ describe('Test templating', function() {
           unsubscribed: false
         },
         "",
-        "{links}",        
+        "{articles}",        
         [{
           points: 0,
           comments: 0,
@@ -130,7 +190,7 @@ describe('Test templating', function() {
           lastSent: null,
           unsubscribed: false
         },
-        "{links}",  
+        "{articles}",  
         "",      
         [{
           points: 0,
@@ -159,7 +219,7 @@ describe('Test templating', function() {
           lastSent: null,
           unsubscribed: false
         },
-        "{links}",     
+        "{articles}",     
         "",   
         [{
           points: 0,
@@ -199,13 +259,7 @@ describe('Test templating', function() {
 
   it('text template includes video title', function() {
     assert.equal(
-      `Videos
-
-Title (1 minute)
-
-https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=&emailId=12345&alertId=emailId
-
-`,
+      true,
       buildEmail(
         {
           identifier: "emailId",
@@ -218,7 +272,7 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           unsubscribed: false
         },
         "",
-        "{links}",        
+        "{videos}",        
         [],
         [{
           title_s: "Title",
@@ -226,17 +280,13 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           url_s: "abcdefg",
           audio_length_f: 60
         }]
-      ).textEmail.replace(/emailId=[a-z0-9]+/g, "emailId=12345")
+      ).textEmail.indexOf(`Title (1 minute)`) >= 0
     );
   });
 
   it('html template includes includes title', function() {
   assert.equal(
-      `<h2>Videos</h2><strong>
-<a href="https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=gary.sieling%40gmail.com&emailId=12345&alertId=emailId">Title (1 minute)</a>
-</strong><br />
-<br />
-`,
+      true,
       buildEmail(
         {
           identifier: "emailId",
@@ -248,7 +298,7 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           lastSent: null,
           unsubscribed: false
         },
-        "{links}",
+        "{videos}",
         "",
         [],
         [{
@@ -257,7 +307,7 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
           url_s: "abcdefg",
           audio_length_f: 60
         }]
-      ).htmlEmail.replace(/emailId=[a-z0-9]+/g, "emailId=12345")
+      ).htmlEmail.indexOf(`Title (1 minute)`) >= 0
    );
   });
   
@@ -394,11 +444,6 @@ https://www.findlectures.com/talk-redirect?id=zzz&url=abcdefg&title=Title&email=
       ).htmlEmail
     );      
   });
-  /*
-        ).replace(
-          /{links}/g, 
-          links
-          */
 });
 
 describe('Test templates', function() {
@@ -410,15 +455,23 @@ describe('Test templates', function() {
     assert.equal(true, getTextTemplate().indexOf("{unsubscribeUrl}") > 0);
   });
 
-  it('html template has spot for links', function() {
-    assert.equal(true, getHtmlTemplate().indexOf("{links}") > 0);
+  it('html template has spot for video links', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{videos}") > 0);
   });
 
-  it('text template has spot for links', function() {
-    assert.equal(true, getTextTemplate().indexOf("{links}") > 0);
+  it('text template has spot for video links', function() {
+    assert.equal(true, getTextTemplate().indexOf("{videos}") > 0);
   });
 
   
+  it('html template has spot for article links', function() {
+    assert.equal(true, getHtmlTemplate().indexOf("{articles}") > 0);
+  });
+
+  it('text template has spot for article links', function() {
+    assert.equal(true, getTextTemplate().indexOf("{articles}") > 0);
+  });
+
   it('html template has spot for emailId', function() {
     assert.equal(true, getHtmlTemplate().indexOf("{emailId}") > 0);
   });
@@ -453,10 +506,11 @@ describe('Test templates', function() {
 
   it('text template has no html', function() {
     assert.equal(true, getTextTemplate().indexOf("<br />") < 0);
+    assert.equal(true, getTextTemplate().indexOf("<br>") < 0);
   });
 
   it('text template has no html', function() {
-    assert.equal(true, getHtmlTemplate().indexOf("<br />") >= 0);
+    assert.equal(true, getHtmlTemplate().indexOf("<br>") >= 0);
   });
 });
 

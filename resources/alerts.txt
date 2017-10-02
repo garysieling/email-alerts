@@ -1,6 +1,10 @@
 Here are this weeks recommendations!
 
-{links}
+Videos
+{videos}
+
+Articles
+{articles}
 
 Peace,
 
