@@ -189,7 +189,7 @@ ${article.url}
     htmlEmail,
     textEmail,
     email,
-    subject: "FindLectures resources on " + like
+    subject: "FindLectures.com Topic Alert: " + like
   }
 }
 
