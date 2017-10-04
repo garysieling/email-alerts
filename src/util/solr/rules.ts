@@ -252,43 +252,51 @@ function getArticles(
   log: (a: string, b: string) => void,
   cb: (error: Error, data: IArticle[]
 ) => void): any {
-  const options = {
-    host: process.env.SOLR_URL,
-    port: '8983',
-    path: getArticleUrl(like, dislike, previouslySent),
-    method: 'GET'
-  };
+  try {
+    const options = {
+      host: process.env.SOLR_URL,
+      port: '8983',
+      path: getArticleUrl(like, dislike, previouslySent),
+      method: 'GET'
+    };
 
-  console.log('getArticles', 'http://' + options.host + ':8983' + options.path);
+    console.log('getArticles', 'http://' + options.host + ':8983' + options.path);
 
-  const maxArticles = 7;
+    const maxArticles = 7;
 
-  let data = '';
-  const req = http.request(options, function(res) {
-    res.on('data', (d) => {
-      data += d;
+    let data = '';
+    const req = http.request(options, function(res) {
+      res.on('data', (d) => {
+        data += d;
+      });
+
+      res.on('end', 
+        () => {
+          try {
+            const response = JSON.parse(data);
+            if (response.match) {
+              let articles: IArticle[] = _.take(response.match.docs, maxArticles);
+              cb(null, articles);
+            } else {
+              cb(new Error(JSON.stringify(response.error, null, 2)), null);          
+            }
+          } catch (e) {
+            cb(e, null);
+          }
+        }
+      );
+
+      res.on('error',
+        (error: Error) => {
+          cb(error, null);
+        }
+      );
     });
 
-    res.on('end', 
-      () => {
-        const response = JSON.parse(data);
-        if (response.match) {
-          let articles: IArticle[] = _.take(response.match.docs, maxArticles);
-          cb(null, articles);
-        } else {
-          cb(new Error(JSON.stringify(response.error, null, 2)), null);          
-        }
-      }
-    );
-
-    res.on('error',
-      (error: Error) => {
-        cb(error, null);
-      }
-    );
-  });
-
-  req.end();    
+    req.end();    
+  } catch (e) {
+    cb(e, null);
+  }
 }
 
 export {
