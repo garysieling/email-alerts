@@ -38,6 +38,10 @@ function sendAlert() {
   console.log('sendAlert');
 }
 
+process.on('uncaughtException', function (err) {
+    console.log(err);
+}); 
+
 function main() {
   const log = console.log;
   // initialize once, so that if this takes more than a day, it won't clip those people

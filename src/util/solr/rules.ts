@@ -197,43 +197,52 @@ function getVideos(
   log: (a: string, b: string) => void,
   cb: (error: Error, data: IVideo[]) => void
 ): any {
-  const options = {
-    host: process.env.SOLR_URL,
-    port: '8983',
-    path: getVideoUrl(like, dislike, previouslySent),
-    method: 'GET'
-  };
+  try {
+    const options = {
+      host: process.env.SOLR_URL,
+      port: '8983',
+      path: getVideoUrl(like, dislike, previouslySent),
+      method: 'GET'
+    };
 
-  let data = '';
+    let data = '';
 
-  console.log('getVideos', options.host + options.path);
+    console.log('getVideos', options.host + options.path);
 
-  const maxVideos = 3;
+    const maxVideos = 3;
 
-  const req = http.request(options, function(res) {
-    res.on('data', (d) => {
-      data += d;
+    const req = http.request(options, function(res) {
+      res.on('data', (d) => {
+        data += d;
+      });
+
+      res.on('end', 
+        () => {
+          try {
+            const response = JSON.parse(data);
+
+            if (response.match) {
+              let videos: IVideo[] = _.take(response.match.docs, maxVideos);
+              cb(null, videos);
+            } else {
+              cb(new Error(JSON.stringify(response.error, null, 2)), null);
+            }
+          } catch (e) {
+            cb(e, null);
+          }
+        }
+      );
+
+      res.on('error', (error: Error) => {
+        console.log('caught error');
+        cb(error, null);
+      })
     });
 
-    res.on('end', 
-      () => {
-        const response = JSON.parse(data);
-
-        if (response.match) {
-          let videos: IVideo[] = _.take(response.match.docs, maxVideos);
-          cb(null, videos);
-        } else {
-          cb(new Error(JSON.stringify(response.error, null, 2)), null);
-        }
-      }
-    );
-
-    res.on('error', (error: Error) => {
-      cb(error, null);
-    })
-  });
-
-  req.end();    
+    req.end();    
+  } catch (e) {
+    cb(e, null);
+  }
 }
 
 function getArticles(
