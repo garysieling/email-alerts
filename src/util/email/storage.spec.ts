@@ -3,7 +3,8 @@ const _ = require('lodash');
 
 import { 
   loadSent,
-  loadAlerts
+  loadAlerts,
+  recordAlertSent
 } from './storage';
 
 describe('Test for sent emails', function() {
@@ -82,6 +83,34 @@ describe('Test alert listing', function() {
       () => {
         assert.equal(true, data[2].index >= 0);
        
+        done();
+    });
+  });
+
+  it('index goes up', function(done) {
+    const data1: any[] = [];
+    loadAlerts(
+      (cb1: any, record1: any) => {
+        data1.push(record1);
+
+        cb1();
+      },
+      () => {   
+        recordAlertSent(data1[1], '17442', () => {
+          const data2: any[] = [];
+
+          loadAlerts(
+            (cb2: any, record2: any) => {
+              data2.push(record2);
+
+              cb2();
+            },
+            () => {
+              assert.equal(data1[1].index + 1, data2[1].index);
+            }
+          );
+        })
+        
         done();
     });
   });

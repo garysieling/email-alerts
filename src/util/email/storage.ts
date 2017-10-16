@@ -131,7 +131,7 @@ function loadAlerts(
               created: new Date(parseInt(data['created'])),
               lastEligible: lastEligible ? new Date(lastEligible * 24 * 3600 * 1000) : null,
               failure: (data['failure'] || '') !== '',
-              index: parseInt(data['failure'] || '0')
+              index: parseInt(data['index'] || '0')
             }
             
             rowCallback(cb2, alertData);
@@ -280,7 +280,8 @@ function recordAlertSent(context: IAlertTemplate, todayRounded: String, cb: () =
   updateSheet("alert", "Requested Alerts", {
     identifier: context.identifier,
     "Last Sent": (new Date().getTime()) + "",
-    "Last Eligible": todayRounded
+    "Last Eligible": todayRounded,
+    "Index": context.index + 1
   }, cb);
 }
 
