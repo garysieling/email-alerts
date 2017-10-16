@@ -129,7 +129,8 @@ function loadAlerts(
               unsubscribed: !!data['unsubscribed'],
               lastSent: lastSent ? new Date(lastSent) : null,
               created: new Date(parseInt(data['created'])),
-              lastEligible: lastEligible ? new Date(lastEligible * 24 * 3600 * 1000) : null
+              lastEligible: lastEligible ? new Date(lastEligible * 24 * 3600 * 1000) : null,
+              failure: (data['failure'] || '') !== ''
             }
             
             rowCallback(cb2, alertData);

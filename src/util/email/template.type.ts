@@ -30,6 +30,7 @@ interface IAlertTemplate {
   created: Date;
   lastEligible: Date;
   unsubscribed: boolean;
+  failure: boolean;
 }
 
 export {

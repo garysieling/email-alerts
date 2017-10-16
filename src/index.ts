@@ -59,6 +59,7 @@ function main() {
       log('isEligible', context.email, context.identifier, eligible);
       
       if (!context.unsubscribed && 
+          !context.failure &&
           eligible) {
 
         loadSent(

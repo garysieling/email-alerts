@@ -50,7 +50,7 @@ describe('Test alert listing', function() {
         cb();
       },
       () => {
-        assert.equal(true, data[1].lastSent.getFullYear() === 2017);
+        assert.equal(true, data[2].lastSent.getFullYear() === 2017);
        
         done();
     });
@@ -127,6 +127,21 @@ describe('Test alert listing', function() {
       },
       () => {
         assert.equal(true, data[0].unsubscribed);
+        
+        done();
+    });
+  });
+
+  it('is loads failure', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[0].failure);
         
         done();
     });
