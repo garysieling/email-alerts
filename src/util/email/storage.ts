@@ -130,7 +130,8 @@ function loadAlerts(
               lastSent: lastSent ? new Date(lastSent) : null,
               created: new Date(parseInt(data['created'])),
               lastEligible: lastEligible ? new Date(lastEligible * 24 * 3600 * 1000) : null,
-              failure: (data['failure'] || '') !== ''
+              failure: (data['failure'] || '') !== '',
+              index: parseInt(data['failure'] || '0')
             }
             
             rowCallback(cb2, alertData);

@@ -31,6 +31,7 @@ interface IAlertTemplate {
   lastEligible: Date;
   unsubscribed: boolean;
   failure: boolean;
+  index: number;
 }
 
 export {

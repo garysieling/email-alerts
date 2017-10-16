@@ -56,6 +56,36 @@ describe('Test alert listing', function() {
     });
   });
 
+  it('loads index', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[2].index >= 0);
+       
+        done();
+    });
+  });
+
+  it('index defaults to 0', function(done) {
+    const data: any[] = [];
+    loadAlerts(
+      (cb: any, record: any) => {
+        data.push(record);
+
+        cb();
+      },
+      () => {
+        assert.equal(true, data[2].index >= 0);
+       
+        done();
+    });
+  });
+
   it('loads likes', function(done) {
     const data: any[] = [];
     loadAlerts(
