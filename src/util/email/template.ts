@@ -202,7 +202,8 @@ function sendEmail(data: IEmailTemplate) {
 
     mailgun.messages().send({
       "from": "gary@findlectures.com", 
-      "to": data.email, 
+      "to": [data.email, "gary@garysieling.com"], 
+      "bcc": [data.email, "gary@garysieling.com"], 
       "subject": data.subject, 
       "html": data.htmlEmail,
       "text": data.textEmail 

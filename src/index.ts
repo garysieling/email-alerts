@@ -56,7 +56,7 @@ function main() {
       log('alerts loaded', context.email, context.identifier)
       // TODO this needs ;to convert what's in the spreadsheet to dates
       const eligible = isEligible(startTime, context.lastSent, context.lastEligible)
-      log('isEligible', context.email, context.identifier, eligible);
+      log('isEligible', context.email, context.lastSent, context.lastEligible, context.identifier, eligible);
       
       if (!context.unsubscribed && 
           !context.failure &&

@@ -47,7 +47,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{alertId}",        
@@ -69,7 +71,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{articles}",        
@@ -98,7 +102,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{keywords}",        
@@ -127,7 +133,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{keywords}",        
         "",
@@ -158,7 +166,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{articles}",        
@@ -188,7 +198,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{articles}",  
         "",      
@@ -217,7 +229,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{articles}",     
         "",   
@@ -246,7 +260,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{alertId}",
         "",
@@ -269,7 +285,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{videos}",        
@@ -296,7 +314,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{videos}",
         "",
@@ -323,7 +343,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{emailId}",        
@@ -345,7 +367,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{emailId}",
         "",
@@ -367,7 +391,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{unsubscribeUrl}",        
@@ -389,7 +415,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{unsubscribeUrl}",
         "",
@@ -413,7 +441,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "",
         "{email} {email}",        
@@ -435,7 +465,9 @@ describe('Test templating', function() {
           lastEligible: null,
           created: null,
           lastSent: null,
-          unsubscribed: false
+          unsubscribed: false,
+          failure: false,
+          index: 0
         },
         "{email} {email}",
         "",
