@@ -202,8 +202,21 @@ function sendEmail(data: IEmailTemplate) {
 
     mailgun.messages().send({
       "from": "gary@findlectures.com", 
-      "to": [data.email, "gary@garysieling.com"], 
-      "bcc": [data.email, "gary@garysieling.com"], 
+      "to": data.email, 
+      "subject": data.subject, 
+      "html": data.htmlEmail,
+      "text": data.textEmail 
+    }, (error: any, body: any) => {
+      if (error) {
+        console.log("Error sending", error);
+      } else {
+        console.log("Email sent successfully", body)
+      }
+    });
+    
+    mailgun.messages().send({
+      "from": "gary@findlectures.com", 
+      "to": "gary@findlectures.com", 
       "subject": data.subject, 
       "html": data.htmlEmail,
       "text": data.textEmail 
