@@ -22,6 +22,34 @@ describe('includes the right things', function() {
   });
 });
 
+describe('testing ad blocks', function() {
+  it('includes utm codes in links to ads', function() {
+    assert.equal(true, false);
+  });  
+
+  it('includes ad block in all newsletter emails', function() {
+    // loops over every newsletter
+    assert.equal(true, false);
+  });
+  
+  it('includes utm codes in all links to findlectures from newsletter', function() {
+    // loops over every newsletter
+    assert.equal(true, false);
+  });
+
+  it('includes utm codes in all links to findlectures from generated emails', function() {
+    assert.equal(true, false);
+  });
+
+  it('includes ad block in all newsletter emails', function() {
+    // loops over every newsletter
+    assert.equal(true, false);
+  });
+  
+  it('makes bitly links to ad references', function() {
+    assert.equal(true, false);
+  });
+});
 
 describe('sends newsletter content to people with no requests', function() {
   it('sends first email when someone signs up', function() {
@@ -32,8 +60,8 @@ describe('sends newsletter content to people with no requests', function() {
     // loop over every newsletter / index
     assert.equal(true, false);
   });
-
-  it('includes ad block in all newsletter emails', function() {
+  
+  it('makes all the links in newsletters to findlectures', function() {
     // loops over every newsletter
     assert.equal(true, false);
   });
